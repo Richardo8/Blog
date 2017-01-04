@@ -47,7 +47,7 @@ module.exports = function (app) {
         }
         req.session.user = user;
         req.flash('success', '注册成功');
-        res.redirect('/')
+        res.redirect('/');
       })
     })
   });
