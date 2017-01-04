@@ -27,6 +27,8 @@
   },
   "homepage": "https://github.com/Richardo8/Blog#readme",
   "devDependencies": {
+    "connect-mongo": "^1.3.2",
+    "express-session": "^1.14.2",
     "mongodb": "^2.2.19"
   }
 }
