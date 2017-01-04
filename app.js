@@ -17,11 +17,13 @@ app.use(session({
   key: settings.db,
   cookie: {maxAge: 1000*60*60*24*30},
   store: new MongoStore({
-    db: settings.db,
-    host: settings.host,
-    port: settings.port
+    // db: settings.db,
+    // host: settings.host,
+    // port: settings.port
+    url: settings.url
   })
 }))
+//connect-mongo之后的版本new store的时候需要修改格式 被注释掉的是早现版本的 新版本的使用url
 
 app.set('port', process.env.PORT || 3001);
 
