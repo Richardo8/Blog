@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 var crypto = require('crypto'),
-    User = require('../modules/user.js');
+    User = require('../modules/user.js'),
+    Post = require('../modules/post.js');
 
 /* GET home page. */
 // router.get('/', function(req, res, next) {
@@ -11,11 +12,17 @@ var crypto = require('crypto'),
 
 module.exports = function (app) {
   app.get('/', function (req, res) {
-    res.render('index', {
-      title: '主页',
-      user: req.session.user,
-      success: req.flash('success').toString(),
-      error: req.flash('error').toString()
+    Post.get(null, function (err, posts) {
+      if(err){
+        posts = [];
+      }
+      res.render('index', {
+        title: '主页',
+        user: req.session.user,
+        posts: posts,
+        success: req.flash('success').toString(),
+        error: req.flash('error').toString()
+      })
     })
   });
   app.get('/reg', checkNotLogin)
@@ -103,6 +110,16 @@ module.exports = function (app) {
   });
   app.post('/post', checkLogin)
   app.post('/post', function (req, res) {
+    var currentUser = req.session.user,
+        post = new Post(currentUser.name, req.body.title, req.body.post);
+    post.save(function (err) {
+      if(err){
+        req.flash('error',err);
+        return res.redirect('/');
+      }
+      req.flash('success', '发表成功');
+      res.redirect('/');
+    })
   });
   app.get('/logout', checkLogin)
   app.get('/logout', function (req, res) {
@@ -111,6 +128,9 @@ module.exports = function (app) {
     res.redirect('/')
   });
 
+
+
+  //检测是否登录
   function checkLogin(req, res, next) {
     if(!req.session.user){
       req.flash('error', '未登录');
