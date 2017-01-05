@@ -3,7 +3,12 @@ var router = express.Router();
 
 var crypto = require('crypto'),
     User = require('../modules/user.js'),
-    Post = require('../modules/post.js');
+    Post = require('../modules/post.js'),
+    multer = require('multer');
+
+var upload = multer({
+  dest: './public/images/user'
+})
 
 /* GET home page. */
 // router.get('/', function(req, res, next) {
@@ -127,6 +132,29 @@ module.exports = function (app) {
     req.flash('success', '登出成功');
     res.redirect('/')
   });
+  app.get('/upload', checkLogin);
+  app.get('/upload', function (req, res) {
+    res.render('upload', {
+      title: '文件上传',
+      user: req.session.user,
+      success: req.flash('success').toString(),
+      error: req.flash('error').toString()
+    });
+  });
+  //最新的multer中上传文件格式如下 原来的方法会抛出app.use() requires middleware functions错误
+  app.post('/upload', upload.fields([
+  {name: 'file1'},
+  {name: 'file2'},
+  {name: 'file3'},
+  {name: 'file4'},
+  {name: 'file5'}
+  ]), function (req, res, next) {
+    for(var i in req.files){
+      console.log(req.files[i]);
+    }
+    req.flash('success', '文件上传成功!');
+    res.redirect('/upload');
+  })
 
 
 

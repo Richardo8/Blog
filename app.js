@@ -10,8 +10,17 @@ var MongoStore = require('connect-mongo')(session);
 var routes = require('./routes/index')
 var settings = require('./settings')
 var flash = require('connect-flash')
+// var multer = require('multer')
 
 var app = express();
+
+//app.use() requires middleware functions 用原来的方法multer会抛出该错误
+// app.use(multer({
+//   dest: './public/images',
+//   rename: function (fieldname, filename) {
+//     return filename;
+//   }
+// }))
 
 app.use(session({
   secret: settings.cookieSecret,
