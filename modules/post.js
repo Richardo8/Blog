@@ -18,11 +18,12 @@ Post.prototype.save = function (callback) {
         day: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
         minute: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes())
     }
-    var post = {
+    var posts = {
         name: this.name,
         time: time,
         title: this.title,
-        post: this.post
+        post: this.post,
+        comments: []
     }
 
     mongodb.open(function (err, db) {
@@ -34,7 +35,7 @@ Post.prototype.save = function (callback) {
                 mongodb.close();
                 return callback(err);
             }
-            collection.insert(post, {
+            collection.insert(posts, {
                 safe: true
             }, function (err) {
                 mongodb.close();
@@ -96,7 +97,14 @@ Post.getOne = function (name, day, title, callback) {
                 if(err){
                     return callback(err);
                 }
-                doc.post = markdown.toHTML(doc.post)
+                // doc.post = markdown.toHTML(doc.post)
+                //让留言也支持markdown
+                if(doc){
+                    doc.post = markdown.toHTML(doc.post);
+                    doc.comments.forEach(function (comment) {
+                        comment.content = markdown.toHTML(comment.content);
+                    })
+                }
                 callback(null, doc)
             })
         })
