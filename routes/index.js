@@ -188,7 +188,23 @@ module.exports = function (app) {
         error: req.flash('error').toString()
       })
     })
-  })
+  });
+
+  app.get('/tags', function (req, res) {
+    Post.getTags(function (err, posts) {
+      if(err){
+        req.flash('error', err);
+        return res.redirect('/');
+      }
+      res.render('tags', {
+        title: '标签',
+        posts: posts,
+        user: req.session.user,
+        success: req.flash('success').toString(),
+        error: req.flash('error').toString()
+      });
+    })
+  });
 
   app.get('/u/:name', function (req, res) {
     var page = req.query.p ? parseInt(req.query.p) : 1;
