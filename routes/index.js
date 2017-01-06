@@ -355,6 +355,9 @@ module.exports = function (app) {
     })
   })
 
+  app.use(function (req, res) {
+    res.render('404')
+  })
 
   //检测是否登录
   function checkLogin(req, res, next) {
