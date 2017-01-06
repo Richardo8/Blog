@@ -12,6 +12,7 @@
 </header>
 
 <nav>
+    <span><form action="/search" method="GET"><input type="text" name="keyword" placeholder="SEARCH" class="search" /></form></span>
     <span><a title="主页" href="/">home</a></span>
     <% if (user) { %>
     <span><a title="发表" href="/post">post</a></span>
