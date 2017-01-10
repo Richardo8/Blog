@@ -31,7 +31,7 @@ Comment.prototype.save = function (callback) {
                 "time.day": day,
                 "title": title
             }, {
-                $push: {"comments": comment}
+                $push: {"comments": comment }
             }, function (err) {
                 db.close();;
                 if(err){
