@@ -1,5 +1,6 @@
 var mongodb = require('./db');
 markdown = require('markdown').markdown;
+var ObjectID = require('mongodb').ObjectID;
 
 function Post(name, head, title, tags, post) {
     this.name = name;
@@ -102,7 +103,7 @@ Post.getTen = function (name, page, callback) {
     })
 }
 
-Post.getOne = function (name, day, title, callback) {
+Post.getOne = function (_id, callback) {
     mongodb.open(function (err, db) {
         if(err){
             return callback(err);
@@ -113,9 +114,10 @@ Post.getOne = function (name, day, title, callback) {
                 return callback(err);
             }
             collection.findOne({
-                "name": name,
-                "time.day": day,
-                "title": title
+                // "name": name,
+                // "time.day": day,
+                // "title": title
+                "_id": new ObjectID(_id)
             }, function (err, doc) {
                 if(err){
                     mongodb.close();
@@ -125,9 +127,10 @@ Post.getOne = function (name, day, title, callback) {
                 //让留言也支持markdown
                 if(doc){
                     collection.update({
-                        "name": name,
-                        "time.day": day,
-                        "title": title
+                        // "name": name,
+                        // "time.day": day,
+                        // "title": title
+                        "_id": new ObjectID(_id)
                     }, {
                         $inc: {"pv" : 1}
                     }, function (err) {
