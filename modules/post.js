@@ -1,6 +1,8 @@
-var mongodb = require('./db');
+var mongodb = require('mongodb');
 markdown = require('markdown').markdown;
 var ObjectID = require('mongodb').ObjectID;
+
+var settings = require('../settings');
 
 function Post(name, head, title, tags, post) {
     this.name = name;
@@ -33,19 +35,19 @@ Post.prototype.save = function (callback) {
         pv: 0
     }
 
-    mongodb.open(function (err, db) {
+    mongodb.MongoClient.connect(settings.url, function (err, db) {
         if(err){
             return callback(err);
         }
         db.collection('posts', function (err, collection) {
             if(err){
-                mongodb.close();
+                db.close();;
                 return callback(err);
             }
             collection.insert(posts, {
                 safe: true
             }, function (err) {
-                mongodb.close();
+                db.close();;
                 if(err){
                     return callback(err)
                 }
@@ -56,13 +58,13 @@ Post.prototype.save = function (callback) {
 }
 
 Post.getTen = function (name, page, callback) {
-    mongodb.open(function (err, db) {
+    mongodb.MongoClient.connect(settings.url, function (err, db) {
         if(err){
             return callback(err)
         }
         db.collection('posts', function (err, collection) {
             if(err){
-                mongodb.close();
+                db.close();;
                 return callback(err);
             }
             var query = {};
@@ -76,7 +78,7 @@ Post.getTen = function (name, page, callback) {
                 }).sort({
                     time: -1
                 }).toArray(function (err, docs) {
-                    mongodb.close();
+                    db.close();;
                     if(err){
                         return callback(err);
                     }
@@ -90,7 +92,7 @@ Post.getTen = function (name, page, callback) {
             // collection.find(query).sort({
             //     time: -1
             // }).toArray(function (err, docs) {
-            //     mongodb.close();
+            //     db.close();;
             //     if(err){
             //         return callback(err);
             //     }
@@ -104,13 +106,13 @@ Post.getTen = function (name, page, callback) {
 }
 
 Post.getOne = function (_id, callback) {
-    mongodb.open(function (err, db) {
+    mongodb.MongoClient.connect(settings.url, function (err, db) {
         if(err){
             return callback(err);
         }
         db.collection('posts', function (err, collection) {
             if(err){
-                mongodb.close();
+                db.close();;
                 return callback(err);
             }
             collection.findOne({
@@ -120,7 +122,7 @@ Post.getOne = function (_id, callback) {
                 "_id": new ObjectID(_id)
             }, function (err, doc) {
                 if(err){
-                    mongodb.close();
+                    db.close();;
                     return callback(err);
                 }
                 // doc.post = markdown.toHTML(doc.post)
@@ -134,7 +136,7 @@ Post.getOne = function (_id, callback) {
                     }, {
                         $inc: {"pv" : 1}
                     }, function (err) {
-                        mongodb.close();
+                        db.close();;
                         if(err){
                             return callback(err);
                         }
@@ -157,7 +159,7 @@ Post.edit = function (name, day, title, callback) {
         }
         db.collection('posts', function (err, collection) {
             if(err){
-                mongodb.close();
+                db.close();;
                 return callback(err);
             }
             collection.findOne({
@@ -165,7 +167,7 @@ Post.edit = function (name, day, title, callback) {
                 "time.day": day,
                 "title": title
             }, function (err, doc) {
-                mongodb.close();
+                db.close();;
                 if(err){
                     return callback(err);
                 }
@@ -176,13 +178,13 @@ Post.edit = function (name, day, title, callback) {
 }
 
 Post.update = function (name, day, title, post, callback) {
-    mongodb.open(function (err, db) {
+    mongodb.MongoClient.connect(settings.url, function (err, db) {
         if(err){
             return callback(err);
         }
         db.collection('posts', function (err, collection) {
             if(err){
-                mongodb.close();
+                db.close();;
                 return callback(err);
             }
             collection.update({
@@ -192,7 +194,7 @@ Post.update = function (name, day, title, post, callback) {
             }, {
                 $set: {post: post}
             }, function (err) {
-                mongodb.close();
+                db.close();;
                 if(err){
                     return callback(err);
                 }
@@ -203,13 +205,13 @@ Post.update = function (name, day, title, post, callback) {
 }
 
 Post.remove = function (name, day, title, callback) {
-    mongodb.open(function (err, db) {
+    mongodb.MongoClient.connect(settings.url, function (err, db) {
         if(err){
             return callback(err);
         }
         db.collection('posts', function (err, collection) {
             if(err){
-                mongodb.close();
+                db.close();;
                 return callback(err);
             }
             collection.findOne({
@@ -218,7 +220,7 @@ Post.remove = function (name, day, title, callback) {
                 'title': title
             }, function (err, doc) {
                 if(err){
-                    mongodb.close();
+                    db.close();;
                     return callback(err);
                 }
                 var reprint_from = '';
@@ -240,7 +242,7 @@ Post.remove = function (name, day, title, callback) {
                             }
                         }, function (err) {
                         if(err){
-                            mongodb.close();
+                            db.close();;
                             return callback(err);
                         }
                         }
@@ -254,7 +256,7 @@ Post.remove = function (name, day, title, callback) {
             }, {
                 w: 1
             }, function (err) {
-                mongodb.close();
+                db.close();;
                 if(err){
                     return callback(err)
                 }
@@ -265,13 +267,13 @@ Post.remove = function (name, day, title, callback) {
 }
 
 Post.getArchive = function (callback) {
-    mongodb.open(function (err, db) {
+    mongodb.MongoClient.connect(settings.url, function (err, db) {
         if(err){
             return callback(err);
         }
         db.collection('posts', function (err, collection) {
             if(err){
-                mongodb.close();
+                db.close();;
                 return callback(err);
             }
             collection.find({}, {
@@ -281,7 +283,7 @@ Post.getArchive = function (callback) {
             }).sort({
                 time: -1
             }).toArray(function (err, docs) {
-                mongodb.close();
+                db.close();;
                 if(err){
                     return callback(err);
                 }
@@ -292,17 +294,17 @@ Post.getArchive = function (callback) {
 }
 
 Post.getTags = function (callback) {
-    mongodb.open(function (err, db) {
+    mongodb.MongoClient.connect(settings.url, function (err, db) {
         if(err){
             return callback(err);
         }
         db.collection('posts', function (err, collection) {
             if(err){
-                mongodb.close();
+                db.close();;
                 return callback(err);
             }
             collection.distinct('tags', function (err, docs) {
-                mongodb.close();
+                db.close();;
                 if(err){
                     return callback(err);
                 }
@@ -313,13 +315,13 @@ Post.getTags = function (callback) {
 }
 
 Post.getTag = function (tag, callback) {
-    mongodb.open(function (err, db) {
+    mongodb.MongoClient.connect(settings.url, function (err, db) {
         if(err){
             return callback(err);
         }
         db.collection('posts', function (err, collection) {
             if(err){
-                mongodb.close();
+                db.close();;
                 return callback(err);
             }
             collection.find({
@@ -331,7 +333,7 @@ Post.getTag = function (tag, callback) {
             }).sort({
                 time: -1
             }).toArray(function (err, docs) {
-                mongodb.close();
+                db.close();;
                 if(err){
                     return callback(err);
                 }
@@ -342,13 +344,13 @@ Post.getTag = function (tag, callback) {
 };
 
 Post.search = function (keyword, callback) {
-    mongodb.open(function (err, db) {
+    mongodb.MongoClient.connect(settings.url, function (err, db) {
         if(err){
             return callback(err);
         }
         db.collection('posts', function (err, collection) {
             if(err){
-                mongodb.close();
+                db.close();;
                 return callback(err);
             }
             var pattern = new RegExp(keyword, 'i');
@@ -359,7 +361,7 @@ Post.search = function (keyword, callback) {
                 'time': 1,
                 'title': 1
             }).toArray(function (err, docs) {
-                mongodb.close();
+                db.close();;
                 if(err){
                     return callback(err);
                 }
@@ -370,13 +372,13 @@ Post.search = function (keyword, callback) {
 }
 
 Post.reprint = function (reprint_from, reprint_to, callback) {
-    mongodb.open(function (err, db) {
+    mongodb.MongoClient.connect(settings.url, function (err, db) {
         if(err){
             return callback(err);
         }
         db.collection('posts', function (err, collection) {
             if(err){
-                mongodb.close();
+                db.close();;
                 return callback(err);
             }
             collection.findOne({
@@ -385,7 +387,7 @@ Post.reprint = function (reprint_from, reprint_to, callback) {
                 'title': reprint_from.title
             }, function (err, doc) {
                 if (err) {
-                    mongodb.close();
+                    db.close();;
                     return callback(err);
                 }
                 var date = new Date();
@@ -420,7 +422,7 @@ Post.reprint = function (reprint_from, reprint_to, callback) {
                     }
                 }, function (err) {
                     if (err) {
-                        mongodb.close();
+                        db.close();;
                         return callback(err);
                     }
                 });
@@ -428,7 +430,7 @@ Post.reprint = function (reprint_from, reprint_to, callback) {
                 collection.insert(doc, {
                     safe: true
                 }, function (err, post) {
-                    mongodb.close();
+                    db.close();;
                     if (err) {
                         return callback(err);
                     }
