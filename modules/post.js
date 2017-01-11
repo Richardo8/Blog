@@ -159,7 +159,7 @@ Post.edit = function (name, day, title, callback) {
         }
         db.collection('posts', function (err, collection) {
             if(err){
-                db.close();;
+                db.close();
                 return callback(err);
             }
             collection.findOne({
