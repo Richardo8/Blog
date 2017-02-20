@@ -387,6 +387,10 @@ module.exports = function (app) {
       res.redirect('back')
     })
   })
+    
+  app.get('/test', function () {
+      console.log('123')
+  })
 
   app.use(function (req, res) {
     res.render('404')
