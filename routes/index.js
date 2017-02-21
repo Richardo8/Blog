@@ -23,7 +23,7 @@ module.exports = function (app) {
       if(err){
         posts = [];
       }
-      res.render('index', {
+      res.render('index.ejs', {
         title: '主页',
         posts: posts,
         page: page,
@@ -49,7 +49,7 @@ module.exports = function (app) {
   });
   app.get('/reg', checkNotLogin)
   app.get('/reg', function (req, res) {
-    res.render('reg', {
+    res.render('reg.ejs', {
       title: '注册',
       user: req.session.user,
       success: req.flash('success').toString(),
@@ -94,7 +94,7 @@ module.exports = function (app) {
   });
   app.get('/login', checkNotLogin);
   app.get('/login', function (req, res) {
-    res.render('login', {
+    res.render('login.ejs', {
       title: '登录',
       user: req.session.user,
       success: req.flash('success').toString(),
@@ -123,7 +123,7 @@ module.exports = function (app) {
   });
   app.get('/post', checkLogin)
   app.get('/post', function (req, res) {
-    res.render('post', {
+    res.render('post.ejs', {
       title: '发表',
       user: req.session.user,
       success: req.flash('success').toString(),
@@ -152,7 +152,7 @@ module.exports = function (app) {
   });
   app.get('/upload', checkLogin);
   app.get('/upload', function (req, res) {
-    res.render('upload', {
+    res.render('upload.ejs', {
       title: '文件上传',
       user: req.session.user,
       success: req.flash('success').toString(),
@@ -180,7 +180,7 @@ module.exports = function (app) {
         req.flash('error', err);
         return res.redirect('/')
       }
-      res.render('archive', {
+      res.render('archive.ejs', {
         title: '存档',
         posts: posts,
         user: req.session.user,
@@ -196,7 +196,7 @@ module.exports = function (app) {
         req.flash('error', err);
         return res.redirect('/');
       }
-      res.render('tags', {
+      res.render('tags.ejs', {
         title: '标签',
         posts: posts,
         user: req.session.user,
@@ -212,7 +212,7 @@ module.exports = function (app) {
         req.flash('error', err);
         return res.redirect('/');
       }
-      res.render('tag', {
+      res.render('tag.ejs', {
         title: 'Tag' + req.params.tag,
         posts: posts,
         user: req.session.user,
@@ -223,7 +223,7 @@ module.exports = function (app) {
   });
 
   app.get('/links', function (req, res) {
-    res.render('links', {
+    res.render('links.ejs', {
       title: '友情链接',
       user: req.session.user,
       success: req.flash('success').toString(),
@@ -237,7 +237,7 @@ module.exports = function (app) {
         req.flash('error', err);
         return res.redirect('/');
       }
-      res.render('search', {
+      res.render('search.ejs', {
         title: "SEARCH:" + req.query.keyword,
         posts: posts,
         user: req.session.user,
@@ -259,7 +259,7 @@ module.exports = function (app) {
           req.flash('error', err);
           return res.redirect('/');
         }
-        res.render('user', {
+        res.render('user.ejs', {
           title: user.name,
           posts: posts,
           page: page,
@@ -279,7 +279,7 @@ module.exports = function (app) {
         req.flash('error', err);
         return res.redirect('/');
       }
-      res.render('article', {
+      res.render('article.ejs', {
         title: post.title,
         post: post,
         user: req.session.user,
@@ -297,7 +297,7 @@ module.exports = function (app) {
         req.flash('error', err);
         return res.redirect('back');
       }
-      res.render('edit', {
+      res.render('edit.ejs', {
         title: '编辑',
         post: post,
         user: req.session.user,
