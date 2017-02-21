@@ -16,6 +16,8 @@ var fs = require('fs');
 var accessLog = fs.createWriteStream('access.log', {flags: 'a'});
 var errorLog = fs.createWriteStream('error.log', {flags: 'a'});
 
+var ejs = require('ejs')
+
 var app = express();
 
 //app.use() requires middleware functions 用原来的方法multer会抛出该错误
@@ -43,7 +45,8 @@ app.set('port', process.env.PORT || 3001);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.engine('html', ejs.__express);
+app.set('view engine', 'html');
 
 app.use(flash());
 

@@ -388,8 +388,10 @@ module.exports = function (app) {
     })
   })
     
-  app.get('/test', function () {
-      console.log('123')
+  app.get('/test', function (req, res) {
+      res.render('test', {
+          title: '编辑',
+      })
   })
 
   app.use(function (req, res) {
